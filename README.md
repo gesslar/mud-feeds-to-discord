@@ -8,6 +8,8 @@ This application also monitors the `WATCH_DIR` for any new files being added and
 
 If there are any errors, the application will schedule a retry after `RETRY_TIMEOUT` seconds.
 
+Once a file has been successfully processed and posted, the file will be removed.
+
 ## Setup
 
 Create a `.env` file to house the following variables
