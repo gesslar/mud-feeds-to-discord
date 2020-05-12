@@ -13,5 +13,5 @@ DISCORD_WEBHOOK=https://discordapp.com/api/webhooks/XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ## JSON file format
 The files must be in JSON format and must include the following properties
 
-[] title
-[] content
+- title - this will appear on the first line
+- content - this will be the meat of the message
