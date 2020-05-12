@@ -4,6 +4,7 @@ require("dotenv").config()
 
 const feedsDir = process.env.WATCH_DIR
 const webhook = process.env.DISCORD_WEBHOOK
+const retryTimeout = process.env.RETRY_TIMEOUT
 
 const chokidar = require("chokidar")
 const watcher = chokidar.watch(feedsDir, { persistent: true, awaitWriteFinish: true })
@@ -53,11 +54,10 @@ const processUpdate = file => {
     })
 }
 
-const scheduleRetry = file => setTimeout( () => processUpdate(file), 5000)
+const scheduleRetry = file => setTimeout( () => processUpdate(file), retryTimeout)
 
 // Start up
 console.info(`Watching directory: ${feedsDir}`)
 console.info(`Posting to: ${webhook}`)
 
 watcher.on("add", file => processUpdate(file))
-
