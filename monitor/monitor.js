@@ -5,6 +5,12 @@ require("dotenv").config()
 const feedsDir = process.env.WATCH_DIR
 const webhook = process.env.DISCORD_WEBHOOK
 const retryTimeout = process.env.RETRY_TIMEOUT
+const discordToken = process.env.DISCORD_TOKEN
+const discordChannel = process.env.DISCORD_UPDATE_CHANNEL_ID
+const { Client, MessageEmbed } = require("discord.js")
+const client = new Client()
+
+let channel;
 
 const chokidar = require("chokidar")
 const watcher = chokidar.watch(feedsDir, { persistent: true, awaitWriteFinish: true })
@@ -18,24 +24,34 @@ const readUpdateFile = file => new Promise( (resolve, reject) => {
 })
 
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
-    const payload = { content: `**${data.title}**\n${data.content}` }
 
-    fetch(webhook, {
-        method: "post",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" }
-    })
-    .then( data => {
-        if(data.status >= 200 && data.status <= 299) {
-            resolve(data)
-        } else {
-            reject(data)
-        }
-    })
-    .catch( data => {
-        console.error("ERROR", data)
-        reject(data)
-    })
+    // const payload = { content: `**${data.title}**\n${data.content}` }
+
+    // fetch(webhook, {
+    //     method: "post",
+    //     body: JSON.stringify(payload),
+    //     headers: { "Content-Type": "application/json" }
+    // })
+    // .then( data => {
+    //     if(data.status >= 200 && data.status <= 299) {
+    //         resolve(data)
+    //     } else {
+    //         reject(data)
+    //     }
+    // })
+    // .catch( data => {
+    //     console.error("ERROR", data)
+    //     reject(data)
+    // })
+
+    const message = new MessageEmbed()
+    .setTitle(data.title)
+    .addField("Update", data.content, true)
+    .setTimestamp()
+
+    channel.send(message)
+    .then(resolve)
+    .catch(reject)
 })
 
 const deleteUpdateFile = file => new Promise( (resolve, reject) => {
@@ -45,11 +61,17 @@ const deleteUpdateFile = file => new Promise( (resolve, reject) => {
 })
 
 const processUpdate = file => {
+
+    if(client.readyAt === null) {
+        scheduleRetry(file);
+        return ;
+    }
+    
     readUpdateFile(file)
     .then( postToDiscord )
     .then( () => deleteUpdateFile(file) )
     .catch( err => {
-        console.log(err.status, err.statusText)
+        console.log(err)
         scheduleRetry(file) 
     })
 }
@@ -58,6 +80,16 @@ const scheduleRetry = file => setTimeout( () => processUpdate(file), retryTimeou
 
 // Start up
 console.info(`Watching directory: ${feedsDir}`)
-console.info(`Posting to: ${webhook}`)
+
+client.login(discordToken)
+.then( () => {
+    console.log(`Logged into Discord`)
+    client.channels.fetch(discordChannel)
+    .then(results => {
+        const { guild } = results
+        console.log(`Found channel #${results.name} (${results.id}) on server ${guild.name} (${guild.id})`)
+        channel = results
+    }) 
+})
 
 watcher.on("add", file => processUpdate(file))
