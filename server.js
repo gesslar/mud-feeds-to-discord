@@ -3,10 +3,10 @@
 require("dotenv").config()
 
 const feedsDir = process.env.WATCH_DIR
-const webhook = process.env.DISCORD_WEBHOOK
 const retryTimeout = process.env.RETRY_TIMEOUT
 const discordToken = process.env.DISCORD_TOKEN
 const discordChannel = process.env.DISCORD_UPDATE_CHANNEL_ID
+const port = process.env.PORT
 const { Client, MessageEmbed } = require("discord.js")
 const client = new Client()
 
@@ -16,33 +16,13 @@ const chokidar = require("chokidar")
 const watcher = chokidar.watch(feedsDir, { persistent: true, awaitWriteFinish: true })
 const fse = require("fs-extra")
 const fetch = require("node-fetch")
+const express = require("express")
+const bodyParser = require("body-parser")
+const app = express()
 
-const readUpdateFile = file => new Promise( (resolve, reject) => {
-    fse.readJson(file)
-    .then( resolve )
-    .catch( reject )
-})
+app.use(bodyParser.urlencoded({ extended: false}))
 
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
-
-    // const payload = { content: `**${data.title}**\n${data.content}` }
-
-    // fetch(webhook, {
-    //     method: "post",
-    //     body: JSON.stringify(payload),
-    //     headers: { "Content-Type": "application/json" }
-    // })
-    // .then( data => {
-    //     if(data.status >= 200 && data.status <= 299) {
-    //         resolve(data)
-    //     } else {
-    //         reject(data)
-    //     }
-    // })
-    // .catch( data => {
-    //     console.error("ERROR", data)
-    //     reject(data)
-    // })
 
     const message = new MessageEmbed()
     .setTitle(data.title)
@@ -52,12 +32,7 @@ const postToDiscord = data => new Promise( ( resolve, reject ) => {
     channel.send(message)
     .then(resolve)
     .catch(reject)
-})
-
-const deleteUpdateFile = file => new Promise( (resolve, reject) => {
-    fse.unlink( file )
-    .then( resolve )
-    .catch( reject )
+    
 })
 
 const processUpdate = file => {
@@ -76,11 +51,6 @@ const processUpdate = file => {
     })
 }
 
-const scheduleRetry = file => setTimeout( () => processUpdate(file), retryTimeout)
-
-// Start up
-console.info(`Watching directory: ${feedsDir}`)
-
 client.login(discordToken)
 .then( () => {
     console.log(`Logged into Discord`)
@@ -92,4 +62,24 @@ client.login(discordToken)
     }) 
 })
 
-watcher.on("add", file => processUpdate(file))
+app.post("/api/v1/updates", (req, res) => {
+    if(!req.body.title) {
+        res.status(400).send({
+            success: false,
+            message: "title is required"
+        })
+    } else if(!req.body.update) {
+        res.status(400).send({
+            success: false,
+            message: "update is required"
+        })
+    }
+    res.status(201).send({
+        success: true,
+        message: "update processed"
+    })
+})
+
+const listener = app.listen(process.env.PORT, () => {
+    console.log(`Server listening on port ${listener.address().port}`)
+});
