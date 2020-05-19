@@ -1,7 +1,7 @@
 {
   "name": "mud-feeds-to-discord",
   "version": "1.0.0",
-  "description": "This is a description of it.",
+  "description": "This application monitors a directory for messages to push to Discord.",
   "main": "monitor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
