@@ -14,7 +14,7 @@ Once a file has been successfully processed and posted, the file will be removed
 
 ### Step 1
 
-1. Visit the [Developer's portal](https://discordapp.com/developers/applications/) and create a new application. Record the Cleint ID, you will need it for the next bit
+1. Visit the [Developer's portal](https://discordapp.com/developers/applications/) and create a new application. Record the Client ID, you will need it for the next bit
 2. Click Bot on the left
 3. Click Add Bot and record the Token for later use
 4. Visit https://discordapp.com/oauth2/authorize?client_id=XXXXXXXXXXXXXXXXXX&scope=bot where XXXXXXXXXXXXXXXXXX is your Client ID from #1 above
