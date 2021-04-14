@@ -22,6 +22,11 @@ Once a file has been successfully processed and posted, the file will be removed
 
 ### Step 2
 
+Get the ID for the channel you wish to post to by right-clicking on the channel and clicking Copy ID
+![image](https://user-images.githubusercontent.com/1266935/114635703-45329300-9c93-11eb-9da4-f92b05b0fa0e.png)
+
+### Step 3
+
 Create a `.env` file to house the following variables
 ```
 WATCH_DIR=/home/gesslar/feeds/
@@ -29,6 +34,10 @@ DISCORD_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 DISCORD_UPDATE_CHANNEL_ID=XXXXXXXXXXXXXXXXXX
 RETRY_TIMEOUT=5000
 ```
+
+### Step 4
+
+Write a command to write files to the directory in which the Node.js app is watching.
 
 ## JSON file format
 The files must be in JSON format and must include the following properties
