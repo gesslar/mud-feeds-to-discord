@@ -6,7 +6,7 @@ When this application is started, it will find all files in the `WATCH_DIR` and 
 
 This application also monitors the `WATCH_DIR` for any new files being added and does the same as above.
 
-If there are any errors, the application will schedule a retry after `RETRY_TIMEOUT` seconds.
+If there are any errors, the application will schedule a retry after `RETRY_TIMEOUT` milliseconds.
 
 Once a file has been successfully processed and posted, the file will be removed.
 
