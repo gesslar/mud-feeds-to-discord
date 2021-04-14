@@ -46,6 +46,8 @@ The files must be in JSON format and must include the following properties
 - title - this will appear on the first line
 - content - this will be the meat of the message
 
+### Sample Command to Write to Discord
+
 ```c
 // /cmds/wiz/_discord.c
 // Post updates to the Discord server
