@@ -45,3 +45,92 @@ The files must be in JSON format and must include the following properties
 
 - title - this will appear on the first line
 - content - this will be the meat of the message
+
+```c
+// /cmds/wiz/_discord.c
+// Post updates to the Discord server
+// 
+// Created:     2020/05/12: Gesslar
+// Last Change: 2020/05/12: Gesslar
+//
+// 2020/05/12: Gesslar - Created
+
+inherit STD_CMD ;
+
+int cmd_discord(string str)
+{
+    object tp = this_player();
+    string title = "Update for " + ctime( time() );
+
+    if(!str)
+    {
+        tp->tell("Enter a title or press enter for default ("+title+")\nTitle (q to quit): ");
+        input_to("get_title", tp, title);
+    }
+
+    return 1;
+}
+
+void get_title(string input, object tp, string title)
+{
+    string file;
+
+    if(input == "q" || input == "x")
+    {
+        tp->tell("You cancel the Discord update.\n");
+        return ;
+    }
+
+    if(!input || input == "")
+    {
+        tp->tell("Using title: " + title + "\n\n");
+        tp->tell("Enter the message you would like to send to Discord.\n");
+        tp->tell("Enter only a single . on a blank line to cancel.\n");
+    } else {
+        title = input;
+        tp->tell("Using title: " + title + "\n\n");
+        tp->tell("Enter the message you would like to send to Discord.\n");
+        tp->tell("Enter only a single . on a blank line to cancel.\n");
+    }
+
+    file = temp_file("discord", tp);
+    tp->set_edit_filename(file);
+    tp->edit(file, "finish_edit", this_object(), ([ "tp" : tp, "file" : file, "title" : title ]));
+}
+
+void finish_edit(mapping args)
+{
+    object tp    = args["tp"];
+    string file  = args["file"];
+    string title = args["title"];
+    string mess, json;
+
+    if(!file_exists(file))
+    {
+        tp->tell("You cancel the Discord update.\n");
+        return ;        
+    }
+
+    mess = read_file(file);
+
+    if(!strlen(mess))
+    {
+        tp->tell("You cancel the Discord update.\n");
+        return ;        
+    }
+
+    rm(file);
+    tp->set_edit_filename("");
+
+    json = json_encode( ([ "title" : title, "content" : mess ]) );
+
+    file = sprintf("/open/data/discord/discord-%d", time());
+
+    write_file(file, json + "\n");
+    tp->tell(
+        "The following file has been created: " + file + "\n" +
+        "Bearing the following information:\n" + 
+        sprintf("%O\n", json) + "\n"
+    );
+}
+```
