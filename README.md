@@ -23,6 +23,7 @@ Once a file has been successfully processed and posted, the file will be removed
 ### Step 2
 
 Get the ID for the channel you wish to post to by right-clicking on the channel and clicking Copy ID
+
 ![image](https://user-images.githubusercontent.com/1266935/114635703-45329300-9c93-11eb-9da4-f92b05b0fa0e.png)
 
 ### Step 3
