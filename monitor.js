@@ -3,7 +3,6 @@
 require("dotenv").config()
 
 const feedsDir = process.env.WATCH_DIR
-const webhook = process.env.DISCORD_WEBHOOK
 const retryTimeout = process.env.RETRY_TIMEOUT
 const discordToken = process.env.DISCORD_TOKEN
 const discordChannel = process.env.DISCORD_UPDATE_CHANNEL_ID
@@ -15,7 +14,6 @@ let channel;
 const chokidar = require("chokidar")
 const watcher = chokidar.watch(feedsDir, { persistent: true, awaitWriteFinish: true })
 const fse = require("fs-extra")
-const fetch = require("node-fetch")
 
 const readUpdateFile = file => new Promise( (resolve, reject) => {
     fse.readJson(file)
