@@ -2,7 +2,7 @@
 
 This application monitors a directory for JSON files to post to a Discord channel.
 
-When this application is started, it will find all files in the `WATCH_DIR` and attempt to broadcast the messages contained within those files to the channel specified by the `DISCORD_UPDATE_CHANNEL_ID`. 
+When this application is started, it will find all files in the `WATCH_DIR` and attempt to broadcast the messages contained within those files to the channel specified by the `DISCORD_UPDATE_CHANNEL_ID`.
 
 This application also monitors the `WATCH_DIR` for any new files being added and does the same as above.
 
@@ -14,10 +14,10 @@ Once a file has been successfully processed and posted, the file will be removed
 
 ### Step 1
 
-1. Visit the [Developer's portal](https://discordapp.com/developers/applications/) and create a new application. Record the Client ID, you will need it for the next bit
-2. Click Bot on the left
-3. Click Add Bot and record the Token for later use
-4. Visit https://discordapp.com/oauth2/authorize?client_id=XXXXXXXXXXXXXXXXXX&scope=bot where XXXXXXXXXXXXXXXXXX is your Client ID from #1 above
+1. Visit the [Developer's portal](https://discordapp.com/developers/applications/) and create a new application. Record the `Client ID`, you will need it for the next bit
+2. Click **Bot** on the left
+3. Click **Reset Token** and record the `Token` for later use
+4. Visit https://discordapp.com/oauth2/authorize?client_id=XXXXXXXXXXXXXXXXXX&scope=bot where XXXXXXXXXXXXXXXXXX is your `Client ID` from #1 above
 5. Authorize and add your bot to your server
 
 ### Step 2
@@ -51,7 +51,7 @@ The files must be in JSON format and must include the following properties
 ```c
 // /cmds/wiz/_discord.c
 // Post updates to the Discord server
-// 
+//
 // Created:     2020/05/12: Gesslar
 // Last Change: 2020/05/12: Gesslar
 //
@@ -110,7 +110,7 @@ void finish_edit(mapping args)
     if(!file_exists(file))
     {
         tp->tell("You cancel the Discord update.\n");
-        return ;        
+        return ;
     }
 
     mess = read_file(file);
@@ -118,7 +118,7 @@ void finish_edit(mapping args)
     if(!strlen(mess))
     {
         tp->tell("You cancel the Discord update.\n");
-        return ;        
+        return ;
     }
 
     rm(file);
@@ -131,7 +131,7 @@ void finish_edit(mapping args)
     write_file(file, json + "\n");
     tp->tell(
         "The following file has been created: " + file + "\n" +
-        "Bearing the following information:\n" + 
+        "Bearing the following information:\n" +
         sprintf("%O\n", json) + "\n"
     );
 }
