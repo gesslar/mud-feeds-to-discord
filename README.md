@@ -43,8 +43,9 @@ Write a command to write files to the directory in which the Node.js app is watc
 ## JSON file format
 The files must be in JSON format and must include the following properties
 
-- title - this will appear on the first line
-- content - this will be the meat of the message
+- **title** - this will appear on the first line
+- **content** - this will be the meat of the message
+- **author** - optional - the name of the organisation/individual posting the message
 
 ## Sample Command to Write to Discord
 

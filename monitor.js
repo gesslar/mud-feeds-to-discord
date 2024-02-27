@@ -28,10 +28,11 @@ const readUpdateFile = file => new Promise( (resolve, reject) => {
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
     const embed = new EmbedBuilder()
         .setTitle(data.title)
-        .addFields([
-            { name: "Update", value: data.content, embed: true }
-        ])
-        .setTimestamp()
+        .setDescription(data.content)
+        .setColor("#ffd700")
+
+    if (data.author !== undefined)
+        embed.setAuthor({ name: data.author })
 
     channel.send({ embeds: [ embed ] })
         .then(resolve)
