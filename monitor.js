@@ -21,8 +21,8 @@ const fse = require("fs-extra")
 
 const readUpdateFile = file => new Promise( (resolve, reject) => {
     fse.readJson(file)
-    .then( resolve )
-    .catch( reject )
+    .then(resolve)
+    .catch(reject)
 })
 
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
@@ -34,9 +34,10 @@ const postToDiscord = data => new Promise( ( resolve, reject ) => {
     if (data.author !== undefined)
         embed.setAuthor({ name: data.author })
 
-    channel.send({ embeds: [ embed ] })
-        .then(resolve)
-        .catch(reject)
+    channel.send(message)
+    .then(resolve)
+    .catch(reject)
+
 })
 
 const deleteUpdateFile = file => new Promise( (resolve, reject) => {
@@ -47,15 +48,15 @@ const deleteUpdateFile = file => new Promise( (resolve, reject) => {
 
 const processUpdate = file => {
 
-    if(discordClient.readyAt === null) {
-        scheduleRetry(file)
-        return 
+    if(client.readyAt === null) {
+        scheduleRetry(file);
+        return ;
     }
 
     readUpdateFile(file)
-    .then( postToDiscord )
-    .then( () => deleteUpdateFile(file) )
-    .catch( err => {
+    .then(postToDiscord )
+    .then(() => deleteUpdateFile(file) )
+    .catch(err => {
         console.log(err)
         scheduleRetry(file)
     })
