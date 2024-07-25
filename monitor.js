@@ -6,10 +6,14 @@ const feedsDir = process.env.WATCH_DIR
 const retryTimeout = process.env.RETRY_TIMEOUT
 const discordToken = process.env.DISCORD_TOKEN
 const discordChannel = process.env.DISCORD_UPDATE_CHANNEL_ID
-const { Client, MessageEmbed } = require("discord.js")
-const client = new Client()
+const { Client, EmbedBuilder, GatewayIntentBits } = require("discord.js")
+const discordClient = new Client({
+    intents: [
+        GatewayIntentBits.GuildMessages
+    ]
+})
 
-let channel;
+let channel
 
 const chokidar = require("chokidar")
 const watcher = chokidar.watch(feedsDir, { persistent: true, awaitWriteFinish: true })
@@ -22,14 +26,18 @@ const readUpdateFile = file => new Promise( (resolve, reject) => {
 })
 
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
-    const message = new MessageEmbed()
-    .setTitle(data.title)
-    .addField("Update", data.content, true)
-    .setTimestamp()
+    const embed = new EmbedBuilder()
+        .setTitle(data.title)
+        .setDescription(data.content)
+        .setColor("#ffd700")
+
+    if (data.author !== undefined)
+        embed.setAuthor({ name: data.author })
 
     channel.send(message)
     .then(resolve)
     .catch(reject)
+
 })
 
 const deleteUpdateFile = file => new Promise( (resolve, reject) => {
@@ -39,6 +47,7 @@ const deleteUpdateFile = file => new Promise( (resolve, reject) => {
 })
 
 const processUpdate = file => {
+
     if(client.readyAt === null) {
         scheduleRetry(file);
         return ;
@@ -58,10 +67,10 @@ const scheduleRetry = file => setTimeout( () => processUpdate(file), retryTimeou
 // Start up
 console.info(`Watching directory: ${feedsDir}`)
 
-client.login(discordToken)
+discordClient.login(discordToken)
 .then( () => {
     console.log(`Logged into Discord`)
-    client.channels.fetch(discordChannel)
+    discordClient.channels.fetch(discordChannel)
     .then(results => {
         const { guild } = results
         console.log(`Found channel #${results.name} (${results.id}) on server ${guild.name} (${guild.id})`)
