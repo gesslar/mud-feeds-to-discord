@@ -49,8 +49,8 @@ const deleteUpdateFile = file => new Promise( (resolve, reject) => {
 const processUpdate = file => {
 
     if(client.readyAt === null) {
-        scheduleRetry(file);
-        return ;
+        scheduleRetry(file)
+        return
     }
 
     readUpdateFile(file)
