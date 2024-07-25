@@ -17,12 +17,11 @@ const fse = require("fs-extra")
 
 const readUpdateFile = file => new Promise( (resolve, reject) => {
     fse.readJson(file)
-    .then( resolve )
-    .catch( reject )
+    .then(resolve)
+    .catch(reject)
 })
 
 const postToDiscord = data => new Promise( ( resolve, reject ) => {
-
     const message = new MessageEmbed()
     .setTitle(data.title)
     .addField("Update", data.content, true)
@@ -31,7 +30,6 @@ const postToDiscord = data => new Promise( ( resolve, reject ) => {
     channel.send(message)
     .then(resolve)
     .catch(reject)
-    
 })
 
 const deleteUpdateFile = file => new Promise( (resolve, reject) => {
@@ -41,18 +39,17 @@ const deleteUpdateFile = file => new Promise( (resolve, reject) => {
 })
 
 const processUpdate = file => {
-
     if(client.readyAt === null) {
         scheduleRetry(file);
         return ;
     }
-    
+
     readUpdateFile(file)
-    .then( postToDiscord )
-    .then( () => deleteUpdateFile(file) )
-    .catch( err => {
+    .then(postToDiscord )
+    .then(() => deleteUpdateFile(file) )
+    .catch(err => {
         console.log(err)
-        scheduleRetry(file) 
+        scheduleRetry(file)
     })
 }
 
@@ -69,7 +66,7 @@ client.login(discordToken)
         const { guild } = results
         console.log(`Found channel #${results.name} (${results.id}) on server ${guild.name} (${guild.id})`)
         channel = results
-    }) 
+    })
 })
 
 watcher.on("add", file => processUpdate(file))
