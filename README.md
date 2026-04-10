@@ -29,6 +29,7 @@ Get the ID for the channel you wish to post to by right-clicking on the channel 
 ### Step 3
 
 Create a `.env` file in the root of the Node.js directory to house the following variables
+
 ```
 WATCH_DIR=/home/gesslar/feeds/
 DISCORD_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -41,6 +42,7 @@ RETRY_TIMEOUT=5000
 Write a command to write files to the directory in which the Node.js app is watching.
 
 ## JSON file format
+
 The files must be in JSON format and must include the following properties
 
 - **title** - this will appear on the first line
@@ -137,3 +139,19 @@ void finish_edit(mapping args)
     );
 }
 ```
+
+## License
+
+`mud-feeds-to-discord` is released under the [0BSD](LICENSE.txt).
+
+This package includes or depends on third-party components under their own
+licenses:
+
+| Dependency | License |
+| --- | --- |
+| [body-parser](https://github.com/expressjs/body-parser) | MIT |
+| [chokidar](https://github.com/paulmillr/chokidar) | MIT |
+| [discord.js](https://github.com/discordjs/discord.js) | Apache-2.0 |
+| [dotenv](https://github.com/motdotla/dotenv) | BSD-2-Clause |
+| [express](https://github.com/expressjs/express) | MIT |
+| [fs-extra](https://github.com/jprichardson/node-fs-extra) | MIT |
