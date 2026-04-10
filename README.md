@@ -30,7 +30,7 @@ Get the ID for the channel you wish to post to by right-clicking on the channel 
 
 Create a `.env` file in the root of the Node.js directory to house the following variables
 
-```
+```text
 WATCH_DIR=/home/gesslar/feeds/
 DISCORD_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 DISCORD_UPDATE_CHANNEL_ID=XXXXXXXXXXXXXXXXXX
